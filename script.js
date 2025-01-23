@@ -48,7 +48,7 @@ function generateCompanyCheckboxes(companyIds) {
         checkbox.addEventListener("change", updateSelectedCompanies);
 
         label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(`Company ${id}`));
+        label.appendChild(document.createTextNode(`${id}`));
         checkboxContainer.appendChild(label);
 
         // Add to selected companies initially

@@ -1,14 +1,27 @@
-/* styles.css */
+/* Base styles (already provided) */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f4f4f4;
+    background-image: url('images/74879.jpg');
+    /* Replace with your image path */
+    background-size: cover;
+    /* Scale the image to cover the entire viewport */
+    background-repeat: no-repeat;
+    /* Avoid repeating the image */
+    background-attachment: fixed;
+    /* Keep the background fixed during scrolling */
+    background-position: center;
+    /* Center the image */
     display: flex;
     justify-content: center;
     align-items: flex-start;
     height: 100vh;
+    color: #333;
+    /* Ensure text is readable */
 }
+
 
 .calendar-container {
     width: 100%;
@@ -20,6 +33,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .nav-button {
@@ -66,6 +80,25 @@ body {
 
 .day:last-child {
     border-right: none;
+}
+
+/* Flex container for navigation buttons and heading */
+.calendar-header {
+    display: flex;
+    align-items: center;
+    /* Vertically center-align the items */
+    justify-content: space-between;
+    /* Distribute items with space between them */
+    gap: 15px;
+    /* Add spacing between items */
+    padding: 10px;
+    /* Add padding inside the container */
+    background-color: #f8f9fa;
+    /* Optional: Background for visibility */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Optional: Add a shadow */
+    border-radius: 5px;
+    /* Optional: Add rounded corners */
 }
 
 #heatmap {
@@ -120,17 +153,120 @@ body {
     background-color: #196127;
 }
 
+/* Flexbox styling for the checkbox container */
 .checkbox-container {
     margin-bottom: 20px;
     display: flex;
-    gap: 10px;
     flex-wrap: wrap;
+    /* Allow wrapping to the next line */
+    gap: 15px;
+    /* Space between checkboxes */
+    align-items: center;
+    /* Align items vertically */
+    justify-content: flex-start;
+    /* Align items to the left */
 }
 
+/* Styling for individual checkboxes and labels */
 .company-checkbox {
     display: flex;
     align-items: center;
     font-size: 16px;
-    gap: 5px;
+    gap: 8px;
+    /* Space between the checkbox and label text */
     cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+.company-checkbox:hover {
+    background-color: #e9ecef;
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #007bff;
+    /* Customize checkbox color */
+}
+
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .calendar-container {
+        max-width: 100%;
+    }
+
+    .calendar-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .nav-button {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .grid-header {
+        grid-template-columns: 80px repeat(7, 1fr);
+    }
+
+    #heatmap {
+        grid-template-columns: 80px repeat(7, 1fr);
+    }
+
+    .time-slot,
+    .day {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    .cell {
+        height: 30px;
+        font-size: 10px;
+    }
+
+    .checkbox-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .company-checkbox {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-header {
+        grid-template-columns: 60px repeat(7, 1fr);
+    }
+
+    #heatmap {
+        grid-template-columns: 60px repeat(7, 1fr);
+    }
+
+    .nav-button {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .time-slot,
+    .day {
+        font-size: 10px;
+        padding: 5px;
+    }
+
+    .cell {
+        height: 25px;
+        font-size: 8px;
+    }
 }

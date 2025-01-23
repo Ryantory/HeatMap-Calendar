@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heat Map Calendar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <button id="prev" class="nav-button">← Previous</button>
+            <h2 id="calendar-range"></h2>
+            <button id="next" class="nav-button">Next →</button>
+        </div>
+        <div id="checkbox-container" class="checkbox-container"></div>
+        <div class="calendar-grid">
+            <div class="grid-header">
+                <div class="time-slot"></div>
+                <div class="day">Monday</div>
+                <div class="day">Tuesday</div>
+                <div class="day">Wednesday</div>
+                <div class="day">Thursday</div>
+                <div class="day">Friday</div>
+                <div class="day">Saturday</div>
+                <div class="day">Sunday</div>
+            </div>
+            <div id="heatmap"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+
+
+</html>

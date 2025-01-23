@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            margin-top: 20px;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Weekly Schedule Generator</h1>
+
+    <div class="form-section">
+        <label for="company-name">Company Name:</label>
+        <input type="text" id="company-name" placeholder="Enter company name">
+
+        <label for="start-date">Start Date:</label>
+        <input type="date" id="start-date">
+
+        <label for="start-time">Start Time:</label>
+        <input type="time" id="start-time">
+
+        <label for="duration">Duration (in hours):</label>
+        <input type="number" id="duration" step="0.5" placeholder="e.g., 1.5">
+
+        <label>Repeat on:</label>
+        <div>
+            <label><input type="checkbox" class="day-checkbox" value="Monday"> Monday</label>
+            <label><input type="checkbox" class="day-checkbox" value="Tuesday"> Tuesday</label>
+            <label><input type="checkbox" class="day-checkbox" value="Wednesday"> Wednesday</label>
+            <label><input type="checkbox" class="day-checkbox" value="Thursday"> Thursday</label>
+            <label><input type="checkbox" class="day-checkbox" value="Friday"> Friday</label>
+            <label><input type="checkbox" class="day-checkbox" value="Saturday"> Saturday</label>
+            <label><input type="checkbox" class="day-checkbox" value="Sunday"> Sunday</label>
+        </div>
+
+        <label for="end-date">End Date:</label>
+        <input type="date" id="end-date">
+    </div>
+
+    <button onclick="addAvailability()">Add Availability</button>
+    <button onclick="downloadJSON()">Download JSON</button>
+
+    <div class="form-section">
+        <label for="import-file">Import Existing JSON:</label>
+        <input type="file" id="import-file" accept=".json" onchange="importJSON()">
+    </div>
+
+    <h3>Current Schedule:</h3>
+    <pre id="output"></pre>
+
+    <script>
+        // Initialize the JSON object
+        let schedule = {};
+
+        function addAvailability() {
+            const companyName = document.getElementById("company-name").value;
+            const startDate = new Date(document.getElementById("start-date").value);
+            const startTime = document.getElementById("start-time").value;
+            const duration = parseFloat(document.getElementById("duration").value);
+            const endDate = new Date(document.getElementById("end-date").value);
+            const selectedDays = Array.from(document.querySelectorAll(".day-checkbox:checked")).map(cb => cb.value);
+
+            if (!companyName || !startDate || !startTime || !duration || !endDate || selectedDays.length === 0) {
+                alert("Please fill out all fields!");
+                return;
+            }
+
+            // Initialize company in the schedule if not already present
+            if (!schedule[companyName]) {
+                schedule[companyName] = {};
+            }
+
+            const startHour = parseInt(startTime.split(":")[0]);
+            const startMinutes = parseInt(startTime.split(":")[1]);
+
+            // Add time slots to the schedule
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                const dayName = d.toLocaleDateString("en-US", { weekday: "long" });
+                if (selectedDays.includes(dayName)) {
+                    const dateKey = d.toISOString().split("T")[0];
+
+                    for (let t = 0; t < duration * 2; t++) { // 30-minute intervals
+                        const totalMinutes = (startHour * 60 + startMinutes) + t * 30;
+                        const hour = Math.floor(totalMinutes / 60);
+                        const minutes = totalMinutes % 60;
+
+                        const timeKey = `${dateKey}-${hour.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+                        schedule[companyName][timeKey] = "available";
+                    }
+                }
+            }
+
+            // Update the displayed JSON
+            document.getElementById("output").textContent = JSON.stringify(schedule, null, 2);
+        }
+
+        function downloadJSON() {
+            const jsonStr = JSON.stringify(schedule, null, 2);
+            const blob = new Blob([jsonStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "schedule.json";
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importJSON() {
+            const fileInput = document.getElementById("import-file");
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    try {
+                        const importedData = JSON.parse(event.target.result);
+                        schedule = importedData;
+
+                        // Update the displayed JSON
+                        document.getElementById("output").textContent = JSON.stringify(schedule, null, 2);
+                        alert("JSON file imported successfully!");
+                    } catch (error) {
+                        alert("Invalid JSON file. Please check the file format.");
+                    }
+                };
+                reader.readAsText(file);
+            } else {
+                alert("No file selected.");
+            }
+        }
+    </script>
+</body>
+
+</html>
